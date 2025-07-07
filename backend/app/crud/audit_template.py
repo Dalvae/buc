@@ -22,7 +22,7 @@ def get_multi(*, session: Session, skip: int = 0, limit: int = 100) -> List[Audi
 
 
 def count(*, session: Session) -> int:
-    count = session.exec(select(func.count()).select_from(AuditTemplate)).one_or_none()
+    count = session.exec(select(func.count(AuditTemplate.id))).one_or_none()
     return count if count is not None else 0
 
 

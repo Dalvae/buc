@@ -34,7 +34,9 @@ def get_multi_by_company(
         statement = select(Area).where(Area.company_id == company_id)
     else:
         assigned_area_ids = {area.id for area in current_user.assigned_areas if area.id}
-        statement = select(Area).where(Area.company_id == company_id, Area.id.in_(assigned_area_ids) if assigned_area_ids else True)
+        statement = select(Area).where(Area.company_id == company_id)
+        if assigned_area_ids:
+            statement = statement.where(Area.id.in_(list(assigned_area_ids)))
 
     statement = statement.offset(skip).limit(limit)
     return list(session.exec(statement).all())
@@ -46,7 +48,9 @@ def count_by_company(*, session: Session, company_id: uuid.UUID, current_user: U
         statement = select(func.count(Area.id)).where(Area.company_id == company_id)
     else:
         assigned_area_ids = {area.id for area in current_user.assigned_areas if area.id}
-        statement = select(func.count()).where(Area.company_id == company_id, Area.id.in_(assigned_area_ids) if assigned_area_ids else True)
+        statement = select(func.count(Area.id)).where(Area.company_id == company_id)
+        if assigned_area_ids:
+            statement = statement.where(Area.id.in_(list(assigned_area_ids)))
     
     count = session.exec(statement).one_or_none()
     return count if count is not None else 0

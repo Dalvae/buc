@@ -23,7 +23,7 @@ def get_multi_for_template(
     statement = (
         select(QuestionTemplate)
         .where(QuestionTemplate.audit_template_id == audit_template_id)
-        .order_by(QuestionTemplate.order)
+        .order_by(QuestionTemplate.order.asc())
     )
     return list(session.exec(statement).all())
 
@@ -32,7 +32,7 @@ def count_for_template(*, session: Session, audit_template_id: uuid.UUID) -> int
     if not session.get(AuditTemplate, audit_template_id):
         raise HTTPException(status_code=404, detail="Audit Template not found")
     count_statement = (
-        select(func.count())
+        select(func.count(QuestionTemplate.id))
         .where(QuestionTemplate.audit_template_id == audit_template_id)
     )
     count = session.exec(count_statement).one_or_none()

@@ -2,6 +2,7 @@ import uuid
 from typing import List, Optional, Any
 
 from fastapi import HTTPException
+from sqlalchemy import desc, nulls_last
 from sqlmodel import Session, select, func, or_
 
 from app.crud.audit_template import audit_template
@@ -29,7 +30,7 @@ def get_all(*, session: Session, skip: int = 0, limit: int = 100) -> List[AuditA
 
 
 def count_all(*, session: Session) -> int:
-    count = session.exec(select(func.count()).select_from(AuditAssignment)).one_or_none()
+    count = session.exec(select(func.count(AuditAssignment.id))).one_or_none()
     return count if count is not None else 0
 
 
@@ -40,7 +41,7 @@ def _get_auditor_assignment_conditions(current_user: User) -> list[Any]:
         or_(
             AuditAssignment.is_public,
             AuditAssignment.area_id == None,
-            AuditAssignment.area_id.in_(user_assigned_area_ids) if user_assigned_area_ids else False,
+            AuditAssignment.area_id.in_(list(user_assigned_area_ids)) if user_assigned_area_ids else False,
         ),
     ]
 
@@ -52,10 +53,16 @@ def get_multi_for_auditor(*, session: Session, current_user: User, skip: int = 0
         return []
 
     conditions = _get_auditor_assignment_conditions(current_user)
+    # Use column-based desc() method instead of wrapping with desc()
+    order_by_clauses = [
+        nulls_last(AuditAssignment.due_date.desc()),
+        AuditAssignment.created_at.desc()
+    ]
+    
     statement = (
         select(AuditAssignment)
         .where(*conditions)
-        .order_by(AuditAssignment.due_date.desc().nulls_last(), AuditAssignment.created_at.desc())
+        .order_by(*order_by_clauses)
         .offset(skip)
         .limit(limit)
     )
@@ -69,7 +76,7 @@ def count_for_auditor(*, session: Session, current_user: User) -> int:
         return 0
 
     conditions = _get_auditor_assignment_conditions(current_user)
-    count_statement = select(func.count()).where(*conditions)
+    count_statement = select(func.count(AuditAssignment.id)).where(*conditions)
     count = session.exec(count_statement).one_or_none()
     return count if count is not None else 0
 
@@ -86,7 +93,7 @@ def get_multi_for_company(
 
 def count_for_company(*, session: Session, company_id: uuid.UUID, current_user: User) -> int:
     # Permission checks
-    base_query = select(func.count()).where(AuditAssignment.company_id == company_id)
+    base_query = select(func.count(AuditAssignment.id)).where(AuditAssignment.company_id == company_id)
     # ... additional permission logic ...
     count = session.exec(base_query).one_or_none()
     return count if count is not None else 0
