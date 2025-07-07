@@ -26,7 +26,7 @@ def count(*, session: Session, current_user: User) -> int:
     if current_user.is_superuser or current_user.role == UserRole.ADMIN:
         count_statement = select(func.count()).select_from(Company)
     elif current_user.company_id:
-        count_statement = select(func.count(Company.id)).where(Company.id == current_user.company_id)
+        count_statement = select(func.count()).where(Company.id == current_user.company_id)
     else:
         return 0
     count = session.exec(count_statement).one_or_none()

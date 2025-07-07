@@ -149,7 +149,7 @@ class CompanyBase(SQLModel):
 
 # Database model for Company
 class Company(CompanyBase, table=True):
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
         nullable=False,
@@ -178,7 +178,7 @@ class AreaBase(SQLModel):
 
 # Database model for Area
 class Area(AreaBase, table=True):
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     company_id: uuid.UUID = Field(foreign_key="company.id")
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
@@ -210,7 +210,7 @@ class AuditTemplateBase(SQLModel):
 # Database model for AuditTemplate
 class AuditTemplate(AuditTemplateBase, table=True):
     __tablename__ = "audit_template"
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     created_by_id: uuid.UUID = Field(foreign_key="user.id")
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
@@ -244,7 +244,7 @@ class QuestionTemplateBase(SQLModel):
 # Database model for QuestionTemplate
 class QuestionTemplate(QuestionTemplateBase, table=True):
     __tablename__ = "question_template"
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     audit_template_id: uuid.UUID = Field(foreign_key="audit_template.id")
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
@@ -278,7 +278,7 @@ class AuditAssignmentBase(SQLModel):
 # Database model for AuditAssignment
 class AuditAssignment(AuditAssignmentBase, table=True):
     __tablename__ = "audit_assignment"
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     audit_template_id: uuid.UUID = Field(foreign_key="audit_template.id")
     company_id: uuid.UUID = Field(foreign_key="company.id")
     area_id: Optional[uuid.UUID] = Field(default=None, foreign_key="area.id")
@@ -320,7 +320,7 @@ class AssignedQuestionBase(SQLModel):
 # Database model for AssignedQuestion
 class AssignedQuestion(AssignedQuestionBase, table=True):
     __tablename__ = "assigned_question"
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     audit_assignment_id: uuid.UUID = Field(foreign_key="audit_assignment.id")
     original_question_template_id: Optional[uuid.UUID] = Field(
         default=None, foreign_key="question_template.id"
@@ -354,7 +354,7 @@ class AuditResponseBase(SQLModel):
 # Database model for AuditResponse
 class AuditResponse(AuditResponseBase, table=True):
     __tablename__ = "audit_response"
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     audit_assignment_id: uuid.UUID = Field(foreign_key="audit_assignment.id")
     auditor_id: uuid.UUID = Field(foreign_key="user.id")
     submission_date: Optional[datetime] = Field(default=None)
@@ -375,7 +375,7 @@ class AnswerBase(SQLModel):
 
 # Database model for Answer
 class Answer(AnswerBase, table=True):
-    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     audit_response_id: uuid.UUID = Field(foreign_key="audit_response.id")
     assigned_question_id: uuid.UUID = Field(foreign_key="assigned_question.id")
     created_at: datetime = Field(

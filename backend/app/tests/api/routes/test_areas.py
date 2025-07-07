@@ -79,7 +79,7 @@ def test_create_area_duplicate_name(
     superuser, company = test_superuser_and_company
     name = random_lower_string()
     area_in = AreaCreate(name=name, description="Existing Area")
-    crud.area.create(session=db, area_in=area_in, company_id=company.id)  # type: ignore[arg-type]
+    crud.area.create(session=db, area_in=area_in, company_id=company.id)
 
     data = {"name": name, "description": "Another area with same name"}
     response = client.post(
@@ -98,9 +98,9 @@ def test_read_areas_as_superuser(
 ) -> None:
     superuser, company = test_superuser_and_company
     area_in1 = AreaCreate(name=random_lower_string(), description="Area 1")
-    crud.area.create(session=db, area_in=area_in1, company_id=company.id)  # type: ignore[arg-type]
+    crud.area.create(session=db, area_in=area_in1, company_id=company.id)
     area_in2 = AreaCreate(name=random_lower_string(), description="Area 2")
-    crud.area.create(session=db, area_in=area_in2, company_id=company.id)  # type: ignore[arg-type]
+    crud.area.create(session=db, area_in=area_in2, company_id=company.id)
 
     response = client.get(
         f"/api/v1/companies/{company.id}/areas/",
@@ -121,9 +121,9 @@ def test_read_areas_as_normal_user_in_company(
 ) -> None:
     superuser, company = test_superuser_and_company
     area_in1 = AreaCreate(name=random_lower_string(), description="Area 1")
-    area1 = crud.area.create(session=db, area_in=area_in1, company_id=company.id)  # type: ignore[arg-type]
+    area1 = crud.area.create(session=db, area_in=area_in1, company_id=company.id)
     area_in2 = AreaCreate(name=random_lower_string(), description="Area 2")
-    area2 = crud.area.create(session=db, area_in=area_in2, company_id=company.id)  # type: ignore[arg-type]
+    area2 = crud.area.create(session=db, area_in=area_in2, company_id=company.id)
 
     # Assign user to area1
     link = UserAreaAssignmentLink(user_id=normal_user_in_company.id, area_id=area1.id)
@@ -209,7 +209,7 @@ def test_read_area_by_id_as_normal_user_without_access(
     superuser, company = test_superuser_and_company
     # Create an area that the normal user is not assigned to
     unassigned_area_in = AreaCreate(name=random_lower_string(), description="Unassigned Area")
-    unassigned_area = crud.area.create(session=db, area_in=unassigned_area_in, company_id=company.id)  # type: ignore[arg-type]
+    unassigned_area = crud.area.create(session=db, area_in=unassigned_area_in, company_id=company.id)
 
     response = client.get(
         f"/api/v1/companies/{company.id}/areas/{unassigned_area.id}",

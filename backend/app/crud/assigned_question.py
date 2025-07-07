@@ -23,8 +23,6 @@ def get_multi_for_assignment(
         select(AssignedQuestion)
         .where(AssignedQuestion.audit_assignment_id == audit_assignment_id)
         .order_by(AssignedQuestion.order)
-        .offset(skip)
-        .limit(limit)
     )
     return list(session.exec(statement).all())
 
@@ -33,7 +31,7 @@ def count_for_assignment(*, session: Session, audit_assignment_id: uuid.UUID) ->
     if not session.get(AuditAssignment, audit_assignment_id):
         raise HTTPException(status_code=404, detail="Audit Assignment not found")
     count_statement = (
-        select(func.count(AssignedQuestion.id))
+        select(func.count())
         .where(AssignedQuestion.audit_assignment_id == audit_assignment_id)
     )
     count = session.exec(count_statement).one_or_none()
