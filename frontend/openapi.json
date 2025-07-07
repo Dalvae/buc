@@ -1,0 +1,2769 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Buc", "version": "0.1.0" },
+  "paths": {
+    "/api/v1/login/access-token": {
+      "post": {
+        "tags": ["login"],
+        "summary": "Login Access Token",
+        "description": "OAuth2 compatible token login, get an access token for future requests",
+        "operationId": "login-login_access_token",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": { "$ref": "#/components/schemas/Body_login-login_access_token" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Token" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/login/test-token": {
+      "post": {
+        "tags": ["login"],
+        "summary": "Test Token",
+        "description": "Test access token",
+        "operationId": "login-test_token",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/api/v1/password-recovery/{email}": {
+      "post": {
+        "tags": ["login"],
+        "summary": "Recover Password",
+        "description": "Password Recovery",
+        "operationId": "login-recover_password",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Email" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reset-password/": {
+      "post": {
+        "tags": ["login"],
+        "summary": "Reset Password",
+        "description": "Reset password",
+        "operationId": "login-reset_password",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/NewPassword" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/password-recovery-html-content/{email}": {
+      "post": {
+        "tags": ["login"],
+        "summary": "Recover Password Html Content",
+        "description": "HTML Content for Password Recovery",
+        "operationId": "login-recover_password_html_content",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Email" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "text/html": { "schema": { "type": "string" } } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Read Users",
+        "description": "Retrieve users.",
+        "operationId": "users-read_users",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UsersPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["users"],
+        "summary": "Create User",
+        "description": "Create new user.",
+        "operationId": "users-create_user",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserCreate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/me": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Read User Me",
+        "description": "Get current user.",
+        "operationId": "users-read_user_me",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "Delete User Me",
+        "description": "Delete own user.",
+        "operationId": "users-delete_user_me",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      },
+      "patch": {
+        "tags": ["users"],
+        "summary": "Update User Me",
+        "description": "Update own user.",
+        "operationId": "users-update_user_me",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserUpdateMe" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/api/v1/users/me/password": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Update Password Me",
+        "description": "Update own password.",
+        "operationId": "users-update_password_me",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdatePassword" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/api/v1/users/signup": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Register New User",
+        "description": "Create new user without the need to be logged in.",
+        "operationId": "users-register_new_user",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserRegister" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Read User By Id",
+        "description": "Get a specific user by id.",
+        "operationId": "users-read_user_by_id",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["users"],
+        "summary": "Update User",
+        "description": "Update a user.",
+        "operationId": "users-update_user",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "Delete User",
+        "description": "Delete a user.",
+        "operationId": "users-delete_user",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}/assign-areas": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Assign User To Areas",
+        "description": "Assign a user to multiple areas. This will overwrite existing assignments.\nThe areas must belong to the user's primary company.",
+        "operationId": "users-assign_user_to_areas",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "type": "string", "format": "uuid" },
+                "title": "Area Ids"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}/remove-area/{area_id}": {
+      "delete": {
+        "tags": ["users"],
+        "summary": "Remove User From Area",
+        "description": "Remove a user's assignment from a specific area.",
+        "operationId": "users-remove_user_from_area",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "User Id" }
+          },
+          {
+            "name": "area_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Area Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/utils/test-email/": {
+      "post": {
+        "tags": ["utils"],
+        "summary": "Test Email",
+        "description": "Test emails.",
+        "operationId": "utils-test_email",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "email_to",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "email", "title": "Email To" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/utils/health-check/": {
+      "get": {
+        "tags": ["utils"],
+        "summary": "Health Check",
+        "operationId": "utils-health_check",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "type": "boolean", "title": "Response Utils-Health Check" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/": {
+      "get": {
+        "tags": ["companies"],
+        "summary": "Read Companies",
+        "description": "Retrieve companies.",
+        "operationId": "companies-read_companies",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CompaniesPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["companies"],
+        "summary": "Create Company",
+        "description": "Create new company.",
+        "operationId": "companies-create_company",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CompanyCreate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CompanyPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}": {
+      "get": {
+        "tags": ["companies"],
+        "summary": "Read Company By Id",
+        "description": "Get a specific company by id.",
+        "operationId": "companies-read_company_by_id",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CompanyPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["companies"],
+        "summary": "Update Company",
+        "description": "Update a company.",
+        "operationId": "companies-update_company",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CompanyUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CompanyPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["companies"],
+        "summary": "Delete Company",
+        "description": "Delete a company.",
+        "operationId": "companies-delete_company",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/areas/": {
+      "get": {
+        "tags": ["areas"],
+        "summary": "Read Areas",
+        "description": "Retrieve areas for a specific company.",
+        "operationId": "areas-read_areas",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AreasPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["areas"],
+        "summary": "Create Area",
+        "description": "Create new area within a company.",
+        "operationId": "areas-create_area",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AreaCreate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AreaPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{company_id}/areas/{area_id}": {
+      "get": {
+        "tags": ["areas"],
+        "summary": "Read Area By Id",
+        "description": "Get a specific area by id.",
+        "operationId": "areas-read_area_by_id",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          },
+          {
+            "name": "area_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Area Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AreaPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["areas"],
+        "summary": "Update Area",
+        "description": "Update an area.",
+        "operationId": "areas-update_area",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          },
+          {
+            "name": "area_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Area Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AreaUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AreaPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["areas"],
+        "summary": "Delete Area",
+        "description": "Delete an area.",
+        "operationId": "areas-delete_area",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          },
+          {
+            "name": "area_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Area Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-templates/": {
+      "get": {
+        "tags": ["audit-templates"],
+        "summary": "Read Audit Templates",
+        "description": "Retrieve audit templates.",
+        "operationId": "audit-templates-read_audit_templates",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditTemplatesPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["audit-templates"],
+        "summary": "Create Audit Template",
+        "description": "Create new audit template.",
+        "operationId": "audit-templates-create_audit_template",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AuditTemplateCreate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditTemplatePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-templates/types": {
+      "get": {
+        "tags": ["audit-templates"],
+        "summary": "Get Audit Template Types",
+        "description": "Get a list of available code-defined audit template types.",
+        "operationId": "audit-templates-get_audit_template_types",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": { "additionalProperties": { "type": "string" }, "type": "object" },
+                  "type": "array",
+                  "title": "Response Audit-Templates-Get Audit Template Types"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-templates/{template_id}": {
+      "get": {
+        "tags": ["audit-templates"],
+        "summary": "Read Audit Template",
+        "description": "Get a specific audit template by id.",
+        "operationId": "audit-templates-read_audit_template",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditTemplatePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["audit-templates"],
+        "summary": "Update Audit Template",
+        "description": "Update an audit template.",
+        "operationId": "audit-templates-update_audit_template",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AuditTemplateUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditTemplatePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-templates/{template_id}/questions": {
+      "get": {
+        "tags": ["audit-templates"],
+        "summary": "Read Question Templates For Audit Template",
+        "description": "Retrieve question templates for a specific audit template.",
+        "operationId": "audit-templates-read_question_templates_for_audit_template",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QuestionTemplatesPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["audit-templates"],
+        "summary": "Create Question Template",
+        "description": "Create new question template for an audit template.",
+        "operationId": "audit-templates-create_question_template",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuestionTemplateCreate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QuestionTemplatePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-templates/{template_id}/questions/{question_id}": {
+      "get": {
+        "tags": ["audit-templates"],
+        "summary": "Read Question Template By Id",
+        "description": "Get a specific question template by id for a given audit template.",
+        "operationId": "audit-templates-read_question_template_by_id",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Question Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QuestionTemplatePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["audit-templates"],
+        "summary": "Update Question Template",
+        "description": "Update a question template for an audit template.",
+        "operationId": "audit-templates-update_question_template",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Question Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuestionTemplateUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QuestionTemplatePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["audit-templates"],
+        "summary": "Delete Question Template",
+        "description": "Delete a question template from an audit template.",
+        "operationId": "audit-templates-delete_question_template",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Template Id" }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Question Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/": {
+      "get": {
+        "tags": ["audit-assignments"],
+        "summary": "Read All Audit Assignments",
+        "description": "Retrieve all audit assignments (Superuser/Admin only).",
+        "operationId": "audit-assignments-read_all_audit_assignments",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditAssignmentsPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["audit-assignments"],
+        "summary": "Create Audit Assignment",
+        "description": "Create new audit assignment from a template for a company or area.",
+        "operationId": "audit-assignments-create_audit_assignment",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuditAssignmentCreate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditAssignmentPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/my-assignments": {
+      "get": {
+        "tags": ["audit-assignments"],
+        "summary": "Read My Audit Assignments",
+        "description": "Retrieve audit assignments that the current auditor can respond to.",
+        "operationId": "audit-assignments-read_my_audit_assignments",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditAssignmentsPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/company/{company_id}": {
+      "get": {
+        "tags": ["audit-assignments"],
+        "summary": "Read Audit Assignments For Company",
+        "description": "Retrieve audit assignments for a specific company.",
+        "operationId": "audit-assignments-read_audit_assignments_for_company",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Company Id" }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditAssignmentsPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/{assignment_id}": {
+      "get": {
+        "tags": ["audit-assignments"],
+        "summary": "Read Audit Assignment By Id",
+        "description": "Get a specific audit assignment by id.",
+        "operationId": "audit-assignments-read_audit_assignment_by_id",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditAssignmentPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["audit-assignments"],
+        "summary": "Update Audit Assignment",
+        "description": "Update an audit assignment.",
+        "operationId": "audit-assignments-update_audit_assignment",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuditAssignmentUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditAssignmentPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["audit-assignments"],
+        "summary": "Delete Audit Assignment",
+        "description": "Delete an audit assignment.",
+        "operationId": "audit-assignments-delete_audit_assignment",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/{assignment_id}/responses/": {
+      "post": {
+        "tags": ["audit-responses"],
+        "summary": "Create Audit Response",
+        "description": "Create a new audit response for a given assignment.",
+        "operationId": "audit-responses-create_audit_response",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AuditResponseCreate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditResponsePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["audit-responses"],
+        "summary": "Read Audit Responses For Assignment",
+        "description": "Retrieve audit responses for a specific audit assignment.",
+        "operationId": "audit-responses-read_audit_responses_for_assignment",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditResponsesPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/{assignment_id}/responses/{response_id}": {
+      "get": {
+        "tags": ["audit-responses"],
+        "summary": "Read Audit Response By Id",
+        "description": "Get a specific audit response by id.",
+        "operationId": "audit-responses-read_audit_response_by_id",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "response_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Response Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditResponsePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["audit-responses"],
+        "summary": "Update Audit Response",
+        "description": "Update an audit response.",
+        "operationId": "audit-responses-update_audit_response",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "response_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Response Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AuditResponseUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuditResponsePublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/{assignment_id}/assigned-questions/": {
+      "get": {
+        "tags": ["assigned-questions"],
+        "summary": "Read Assigned Questions For Assignment",
+        "description": "Retrieve assigned questions for a specific audit assignment.",
+        "operationId": "assigned-questions-read_assigned_questions_for_assignment",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0, "title": "Skip" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100, "title": "Limit" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AssignedQuestionsPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-assignments/{assignment_id}/assigned-questions/{question_id}": {
+      "get": {
+        "tags": ["assigned-questions"],
+        "summary": "Read Assigned Question By Id",
+        "description": "Get a specific assigned question by id for a given audit assignment.",
+        "operationId": "assigned-questions-read_assigned_question_by_id",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Question Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AssignedQuestionPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["assigned-questions"],
+        "summary": "Update Assigned Question",
+        "description": "Update an assigned question for an audit assignment.",
+        "operationId": "assigned-questions-update_assigned_question",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Question Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignedQuestionUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AssignedQuestionPublic" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["assigned-questions"],
+        "summary": "Delete Assigned Question",
+        "description": "Delete an assigned question from an audit assignment.",
+        "operationId": "assigned-questions-delete_assigned_question",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Assignment Id" }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid", "title": "Question Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Message" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/private/users/": {
+      "post": {
+        "tags": ["private"],
+        "summary": "Create User",
+        "description": "Create a new user.",
+        "operationId": "private-create_user",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/PrivateUserCreate" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserPublic" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnswerCreate": {
+        "properties": {
+          "answer_value": { "anyOf": [{}, { "type": "null" }], "title": "Answer Value" },
+          "comments": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Comments" },
+          "photo_urls": {
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
+            "title": "Photo Urls"
+          },
+          "assigned_question_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Assigned Question Id"
+          }
+        },
+        "type": "object",
+        "required": ["assigned_question_id"],
+        "title": "AnswerCreate"
+      },
+      "AnswerPublic": {
+        "properties": {
+          "answer_value": { "anyOf": [{}, { "type": "null" }], "title": "Answer Value" },
+          "comments": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Comments" },
+          "photo_urls": {
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
+            "title": "Photo Urls"
+          },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "audit_response_id": { "type": "string", "format": "uuid", "title": "Audit Response Id" },
+          "assigned_question_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Assigned Question Id"
+          }
+        },
+        "type": "object",
+        "required": ["id", "audit_response_id", "assigned_question_id"],
+        "title": "AnswerPublic"
+      },
+      "AreaCreate": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 255, "title": "Name" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "AreaCreate"
+      },
+      "AreaPublic": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 255, "title": "Name" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "company_id": { "type": "string", "format": "uuid", "title": "Company Id" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" },
+          "updated_at": { "type": "string", "format": "date-time", "title": "Updated At" }
+        },
+        "type": "object",
+        "required": ["name", "id", "company_id", "created_at", "updated_at"],
+        "title": "AreaPublic"
+      },
+      "AreaUpdate": {
+        "properties": {
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "AreaUpdate"
+      },
+      "AreasPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/AreaPublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "AreasPublic"
+      },
+      "AssignedQuestionPublic": {
+        "properties": {
+          "text": { "type": "string", "title": "Text" },
+          "question_type": { "$ref": "#/components/schemas/QuestionType" },
+          "options": { "anyOf": [{}, { "type": "null" }], "title": "Options" },
+          "order": { "type": "integer", "title": "Order" },
+          "is_mandatory": { "type": "boolean", "title": "Is Mandatory" },
+          "section_id": {
+            "anyOf": [{ "type": "string", "maxLength": 255 }, { "type": "null" }],
+            "title": "Section Id"
+          },
+          "scoring_weight": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Scoring Weight"
+          },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "audit_assignment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Audit Assignment Id"
+          },
+          "original_question_template_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Original Question Template Id"
+          }
+        },
+        "type": "object",
+        "required": ["text", "question_type", "order", "is_mandatory", "id", "audit_assignment_id"],
+        "title": "AssignedQuestionPublic"
+      },
+      "AssignedQuestionUpdate": {
+        "properties": {
+          "text": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Text" },
+          "options": { "anyOf": [{}, { "type": "null" }], "title": "Options" },
+          "order": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Order" },
+          "is_mandatory": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Mandatory"
+          },
+          "section_id": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Section Id"
+          }
+        },
+        "type": "object",
+        "title": "AssignedQuestionUpdate"
+      },
+      "AssignedQuestionsPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/AssignedQuestionPublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "AssignedQuestionsPublic"
+      },
+      "AuditAssignmentCreate": {
+        "properties": {
+          "title": { "type": "string", "maxLength": 255, "title": "Title" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          },
+          "due_date": {
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
+            "title": "Due Date"
+          },
+          "status": { "$ref": "#/components/schemas/AuditAssignmentStatus", "default": "PENDING" },
+          "periodicity": {
+            "anyOf": [{ "$ref": "#/components/schemas/AuditPeriodicity" }, { "type": "null" }]
+          },
+          "next_due_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Next Due Date"
+          },
+          "is_public": { "type": "boolean", "title": "Is Public", "default": false },
+          "audit_template_id": { "type": "string", "format": "uuid", "title": "Audit Template Id" },
+          "company_id": { "type": "string", "format": "uuid", "title": "Company Id" },
+          "area_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Area Id"
+          }
+        },
+        "type": "object",
+        "required": ["title", "audit_template_id", "company_id"],
+        "title": "AuditAssignmentCreate"
+      },
+      "AuditAssignmentPublic": {
+        "properties": {
+          "title": { "type": "string", "maxLength": 255, "title": "Title" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          },
+          "due_date": {
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
+            "title": "Due Date"
+          },
+          "status": { "$ref": "#/components/schemas/AuditAssignmentStatus", "default": "PENDING" },
+          "periodicity": {
+            "anyOf": [{ "$ref": "#/components/schemas/AuditPeriodicity" }, { "type": "null" }]
+          },
+          "next_due_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Next Due Date"
+          },
+          "is_public": { "type": "boolean", "title": "Is Public", "default": false },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "audit_template_id": { "type": "string", "format": "uuid", "title": "Audit Template Id" },
+          "company_id": { "type": "string", "format": "uuid", "title": "Company Id" },
+          "area_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Area Id"
+          },
+          "created_by_id": { "type": "string", "format": "uuid", "title": "Created By Id" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" },
+          "updated_at": { "type": "string", "format": "date-time", "title": "Updated At" },
+          "audit_template": {
+            "anyOf": [{ "$ref": "#/components/schemas/AuditTemplatePublic" }, { "type": "null" }]
+          },
+          "assigned_questions": {
+            "items": { "$ref": "#/components/schemas/AssignedQuestionPublic" },
+            "type": "array",
+            "title": "Assigned Questions",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "id",
+          "audit_template_id",
+          "company_id",
+          "created_by_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AuditAssignmentPublic"
+      },
+      "AuditAssignmentStatus": {
+        "type": "string",
+        "enum": ["PENDING", "IN_PROGRESS", "COMPLETED", "OVERDUE"],
+        "title": "AuditAssignmentStatus"
+      },
+      "AuditAssignmentUpdate": {
+        "properties": {
+          "title": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Title" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          },
+          "due_date": {
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
+            "title": "Due Date"
+          },
+          "status": {
+            "anyOf": [{ "$ref": "#/components/schemas/AuditAssignmentStatus" }, { "type": "null" }]
+          },
+          "periodicity": {
+            "anyOf": [{ "$ref": "#/components/schemas/AuditPeriodicity" }, { "type": "null" }]
+          },
+          "next_due_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Next Due Date"
+          },
+          "area_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Area Id"
+          },
+          "is_public": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Public"
+          }
+        },
+        "type": "object",
+        "title": "AuditAssignmentUpdate"
+      },
+      "AuditAssignmentsPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/AuditAssignmentPublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "AuditAssignmentsPublic"
+      },
+      "AuditPeriodicity": {
+        "type": "string",
+        "enum": ["ONE_TIME", "DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "ANNUALLY"],
+        "title": "AuditPeriodicity"
+      },
+      "AuditResponseCreate": {
+        "properties": {
+          "overall_comments": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Overall Comments"
+          },
+          "photo_urls": {
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
+            "title": "Photo Urls"
+          },
+          "status": { "$ref": "#/components/schemas/AuditResponseStatus", "default": "DRAFT" },
+          "score": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Score" },
+          "audit_assignment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Audit Assignment Id"
+          },
+          "answers": {
+            "anyOf": [
+              { "items": { "$ref": "#/components/schemas/AnswerCreate" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Answers",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": ["audit_assignment_id"],
+        "title": "AuditResponseCreate"
+      },
+      "AuditResponsePublic": {
+        "properties": {
+          "overall_comments": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Overall Comments"
+          },
+          "photo_urls": {
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
+            "title": "Photo Urls"
+          },
+          "status": { "$ref": "#/components/schemas/AuditResponseStatus", "default": "DRAFT" },
+          "score": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Score" },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "audit_assignment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Audit Assignment Id"
+          },
+          "auditor_id": { "type": "string", "format": "uuid", "title": "Auditor Id" },
+          "submission_date": {
+            "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }],
+            "title": "Submission Date"
+          },
+          "answers": {
+            "items": { "$ref": "#/components/schemas/AnswerPublic" },
+            "type": "array",
+            "title": "Answers",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": ["id", "audit_assignment_id", "auditor_id", "submission_date"],
+        "title": "AuditResponsePublic"
+      },
+      "AuditResponseStatus": {
+        "type": "string",
+        "enum": ["DRAFT", "SUBMITTED"],
+        "title": "AuditResponseStatus"
+      },
+      "AuditResponseUpdate": {
+        "properties": {
+          "overall_comments": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Overall Comments"
+          },
+          "photo_urls": {
+            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
+            "title": "Photo Urls"
+          },
+          "status": {
+            "anyOf": [{ "$ref": "#/components/schemas/AuditResponseStatus" }, { "type": "null" }]
+          },
+          "score": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Score" }
+        },
+        "type": "object",
+        "title": "AuditResponseUpdate"
+      },
+      "AuditResponsesPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/AuditResponsePublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "AuditResponsesPublic"
+      },
+      "AuditTemplateCreate": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 255, "title": "Name" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          },
+          "audit_type_definition_key": {
+            "type": "string",
+            "maxLength": 255,
+            "title": "Audit Type Definition Key"
+          }
+        },
+        "type": "object",
+        "required": ["name", "audit_type_definition_key"],
+        "title": "AuditTemplateCreate"
+      },
+      "AuditTemplatePublic": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 255, "title": "Name" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          },
+          "audit_type_definition_key": {
+            "type": "string",
+            "maxLength": 255,
+            "title": "Audit Type Definition Key"
+          },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "created_by_id": { "type": "string", "format": "uuid", "title": "Created By Id" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" },
+          "updated_at": { "type": "string", "format": "date-time", "title": "Updated At" },
+          "question_templates": {
+            "items": { "$ref": "#/components/schemas/QuestionTemplatePublic" },
+            "type": "array",
+            "title": "Question Templates",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "audit_type_definition_key",
+          "id",
+          "created_by_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AuditTemplatePublic"
+      },
+      "AuditTemplateUpdate": {
+        "properties": {
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
+          "description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "AuditTemplateUpdate"
+      },
+      "AuditTemplatesPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/AuditTemplatePublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "AuditTemplatesPublic"
+      },
+      "Body_login-login_access_token": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [{ "type": "string", "pattern": "password" }, { "type": "null" }],
+            "title": "Grant Type"
+          },
+          "username": { "type": "string", "title": "Username" },
+          "password": { "type": "string", "title": "Password" },
+          "scope": { "type": "string", "title": "Scope", "default": "" },
+          "client_id": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": ["username", "password"],
+        "title": "Body_login-login_access_token"
+      },
+      "CompaniesPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/CompanyPublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "CompaniesPublic"
+      },
+      "CompanyCreate": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 255, "title": "Name" },
+          "details": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Details" },
+          "is_demo": { "type": "boolean", "title": "Is Demo", "default": false }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "CompanyCreate"
+      },
+      "CompanyPublic": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 255, "title": "Name" },
+          "details": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Details" },
+          "is_demo": { "type": "boolean", "title": "Is Demo", "default": false },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" },
+          "updated_at": { "type": "string", "format": "date-time", "title": "Updated At" }
+        },
+        "type": "object",
+        "required": ["name", "id", "created_at", "updated_at"],
+        "title": "CompanyPublic"
+      },
+      "CompanyUpdate": {
+        "properties": {
+          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Name" },
+          "details": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Details" },
+          "is_demo": { "anyOf": [{ "type": "boolean" }, { "type": "null" }], "title": "Is Demo" }
+        },
+        "type": "object",
+        "title": "CompanyUpdate"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Message": {
+        "properties": { "message": { "type": "string", "title": "Message" } },
+        "type": "object",
+        "required": ["message"],
+        "title": "Message"
+      },
+      "NewPassword": {
+        "properties": {
+          "token": { "type": "string", "title": "Token" },
+          "new_password": { "type": "string", "title": "New Password" }
+        },
+        "type": "object",
+        "required": ["token", "new_password"],
+        "title": "NewPassword"
+      },
+      "PrivateUserCreate": {
+        "properties": {
+          "email": { "type": "string", "title": "Email" },
+          "password": { "type": "string", "title": "Password" },
+          "full_name": { "type": "string", "title": "Full Name" },
+          "is_verified": { "type": "boolean", "title": "Is Verified", "default": false }
+        },
+        "type": "object",
+        "required": ["email", "password", "full_name"],
+        "title": "PrivateUserCreate"
+      },
+      "QuestionTemplateCreate": {
+        "properties": {
+          "text": { "type": "string", "title": "Text" },
+          "question_type": { "$ref": "#/components/schemas/QuestionType" },
+          "options": { "anyOf": [{}, { "type": "null" }], "title": "Options" },
+          "order": { "type": "integer", "title": "Order" },
+          "is_mandatory": { "type": "boolean", "title": "Is Mandatory", "default": true },
+          "section_id": {
+            "anyOf": [{ "type": "string", "maxLength": 255 }, { "type": "null" }],
+            "title": "Section Id"
+          },
+          "scoring_weight": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Scoring Weight"
+          },
+          "audit_template_id": { "type": "string", "format": "uuid", "title": "Audit Template Id" }
+        },
+        "type": "object",
+        "required": ["text", "question_type", "order", "audit_template_id"],
+        "title": "QuestionTemplateCreate"
+      },
+      "QuestionTemplatePublic": {
+        "properties": {
+          "text": { "type": "string", "title": "Text" },
+          "question_type": { "$ref": "#/components/schemas/QuestionType" },
+          "options": { "anyOf": [{}, { "type": "null" }], "title": "Options" },
+          "order": { "type": "integer", "title": "Order" },
+          "is_mandatory": { "type": "boolean", "title": "Is Mandatory", "default": true },
+          "section_id": {
+            "anyOf": [{ "type": "string", "maxLength": 255 }, { "type": "null" }],
+            "title": "Section Id"
+          },
+          "scoring_weight": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Scoring Weight"
+          },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "audit_template_id": { "type": "string", "format": "uuid", "title": "Audit Template Id" }
+        },
+        "type": "object",
+        "required": ["text", "question_type", "order", "id", "audit_template_id"],
+        "title": "QuestionTemplatePublic"
+      },
+      "QuestionTemplateUpdate": {
+        "properties": {
+          "text": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Text" },
+          "question_type": {
+            "anyOf": [{ "$ref": "#/components/schemas/QuestionType" }, { "type": "null" }]
+          },
+          "options": { "anyOf": [{}, { "type": "null" }], "title": "Options" },
+          "order": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Order" },
+          "is_mandatory": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Mandatory"
+          },
+          "section_id": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Section Id"
+          },
+          "scoring_weight": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Scoring Weight"
+          }
+        },
+        "type": "object",
+        "title": "QuestionTemplateUpdate"
+      },
+      "QuestionTemplatesPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/QuestionTemplatePublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "QuestionTemplatesPublic"
+      },
+      "QuestionType": {
+        "type": "string",
+        "enum": [
+          "TEXT",
+          "MULTIPLE_CHOICE_SINGLE",
+          "MULTIPLE_CHOICE_MULTIPLE",
+          "YES_NO",
+          "RATING_SCALE",
+          "SECTION_HEADER"
+        ],
+        "title": "QuestionType"
+      },
+      "Token": {
+        "properties": {
+          "access_token": { "type": "string", "title": "Access Token" },
+          "token_type": { "type": "string", "title": "Token Type", "default": "bearer" }
+        },
+        "type": "object",
+        "required": ["access_token"],
+        "title": "Token"
+      },
+      "UpdatePassword": {
+        "properties": {
+          "current_password": { "type": "string", "title": "Current Password" },
+          "new_password": { "type": "string", "title": "New Password" }
+        },
+        "type": "object",
+        "required": ["current_password", "new_password"],
+        "title": "UpdatePassword"
+      },
+      "UserCreate": {
+        "properties": {
+          "email": { "type": "string", "maxLength": 255, "title": "Email" },
+          "is_active": { "type": "boolean", "title": "Is Active", "default": true },
+          "is_superuser": { "type": "boolean", "title": "Is Superuser", "default": false },
+          "full_name": {
+            "anyOf": [{ "type": "string", "maxLength": 255 }, { "type": "null" }],
+            "title": "Full Name"
+          },
+          "role": { "$ref": "#/components/schemas/UserRole", "default": "USER" },
+          "is_verified": { "type": "boolean", "title": "Is Verified", "default": false },
+          "company_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Company Id"
+          },
+          "password": { "type": "string", "title": "Password" }
+        },
+        "type": "object",
+        "required": ["email", "password"],
+        "title": "UserCreate"
+      },
+      "UserPublic": {
+        "properties": {
+          "email": { "type": "string", "maxLength": 255, "title": "Email" },
+          "is_active": { "type": "boolean", "title": "Is Active", "default": true },
+          "is_superuser": { "type": "boolean", "title": "Is Superuser", "default": false },
+          "full_name": {
+            "anyOf": [{ "type": "string", "maxLength": 255 }, { "type": "null" }],
+            "title": "Full Name"
+          },
+          "role": { "$ref": "#/components/schemas/UserRole", "default": "USER" },
+          "is_verified": { "type": "boolean", "title": "Is Verified", "default": false },
+          "company_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Company Id"
+          },
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "created_at": { "type": "string", "format": "date-time", "title": "Created At" }
+        },
+        "type": "object",
+        "required": ["email", "id", "created_at"],
+        "title": "UserPublic"
+      },
+      "UserRegister": {
+        "properties": {
+          "email": { "type": "string", "title": "Email" },
+          "password": { "type": "string", "title": "Password" },
+          "full_name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Full Name"
+          },
+          "company_id": { "type": "string", "format": "uuid", "title": "Company Id" }
+        },
+        "type": "object",
+        "required": ["email", "password", "company_id"],
+        "title": "UserRegister"
+      },
+      "UserRole": { "type": "string", "enum": ["ADMIN", "AUDITOR", "USER"], "title": "UserRole" },
+      "UserUpdate": {
+        "properties": {
+          "email": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Email" },
+          "password": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Password" },
+          "full_name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Full Name"
+          },
+          "is_active": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Active"
+          },
+          "is_superuser": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Superuser"
+          },
+          "role": { "anyOf": [{ "$ref": "#/components/schemas/UserRole" }, { "type": "null" }] },
+          "is_verified": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Is Verified"
+          },
+          "company_id": {
+            "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }],
+            "title": "Company Id"
+          }
+        },
+        "type": "object",
+        "title": "UserUpdate"
+      },
+      "UserUpdateMe": {
+        "properties": {
+          "full_name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Full Name"
+          },
+          "email": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Email" }
+        },
+        "type": "object",
+        "title": "UserUpdateMe"
+      },
+      "UsersPublic": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/UserPublic" },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": { "type": "integer", "title": "Count" }
+        },
+        "type": "object",
+        "required": ["data", "count"],
+        "title": "UsersPublic"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": { "password": { "scopes": {}, "tokenUrl": "/api/v1/login/access-token" } }
+      }
+    }
+  }
+}
